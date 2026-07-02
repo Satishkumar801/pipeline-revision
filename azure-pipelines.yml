@@ -1,0 +1,27 @@
+trigger: none
+
+pool: Default
+
+stages:
+  - stage:
+    displayName: terraform 
+    jobs:
+      - job: 
+        displayName: terraform init plan
+        steps:
+        - task: TerraformInstaller@1
+          displayName: terraform install
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/envorment/dev'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'service-june'
+            backendAzureRmResourceGroupName: 'rajiv-test'
+            backendAzureRmStorageAccountName: 'rajivtest221122'
+            backendAzureRmContainerName: 'rajivcontainer'
+            backendAzureRmKey: 'terraform.tfstate'
