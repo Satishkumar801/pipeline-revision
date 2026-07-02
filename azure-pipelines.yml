@@ -35,3 +35,10 @@ stages:
             backendAzureRmStorageAccountName: 'rajivtest221122'
             backendAzureRmContainerName: 'rajivcontainer'
             backendAzureRmKey: 'terraform.tfstate'
+        - task: TerraformTask@5
+          displayName: terraform plan
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/envorment/dev'
+            environmentServiceNameAzureRM: 'service-june'
