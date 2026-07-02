@@ -11,9 +11,18 @@ parameters:
   - prod
 
 variables:
-- name: workingdir
-  value: 'envorment/dev'
-- group: infra-test-july-terraform-dev
+
+- name: workingDir
+  value: envorment/${{ parameters.envorment }}
+
+- ${{ if eq(parameters.envorment, 'dev') }}:
+  - group: infra-test-july-terraform-dev
+
+- ${{ if eq(parameters.envorment, 'qa') }}:
+  - group: infra-test-july-terraform-qa
+
+- ${{ if eq(parameters.envorment, 'prod') }}:
+  - group: infra-test-july-terraform-prod
  
 
 stages:
