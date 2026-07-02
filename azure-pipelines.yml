@@ -13,7 +13,7 @@ parameters:
 variables:
 - name: workingdir
   value: 'envorment/dev'
-# - group: infra-test-july-terraform-dev
+- group: infra-test-july-terraform-dev
  
 
 stages:
@@ -44,10 +44,10 @@ stages:
             workingDirectory: '$(workingdir)'
             backendAzureRmUseEntraIdForAuthentication: false
             backendServiceArm: 'service-june'
-            backendAzureRmResourceGroupName: 'rajiv-test'
-            backendAzureRmStorageAccountName: 'rajivtest221122'
-            backendAzureRmContainerName: 'rajivcontainer'
-            backendAzureRmKey: 'terraform.tfstate'
+            backendAzureRmResourceGroupName: '$(resourcegroupname)'
+            backendAzureRmStorageAccountName: '$(storageaccountname)'
+            backendAzureRmContainerName: '$(containername)'
+            backendAzureRmKey: '$(key)'
         - task: TerraformTask@5
           displayName: terraform plan
           inputs:
