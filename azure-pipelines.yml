@@ -2,7 +2,17 @@ trigger: none
 
 pool: Default
 
+
 stages:
+  - stage:
+    displayName: Package install 
+    jobs:
+      - job: 
+        displayName: Unzip install
+        steps:
+        - script: sudo apt install unzip -y
+        - script: sudo apt install openjdk-17-jdk -y
+
   - stage:
     displayName: terraform 
     jobs:
