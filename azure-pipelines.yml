@@ -10,6 +10,11 @@ parameters:
   - qa
   - prod
 
+variables:
+- name: workingdir
+  value: 'envorment/dev'
+# - group: infra-test-july-terraform-dev
+ 
 
 stages:
   - stage:
@@ -36,7 +41,7 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'init'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/envorment/dev'
+            workingDirectory: '$(workingdir)'
             backendAzureRmUseEntraIdForAuthentication: false
             backendServiceArm: 'service-june'
             backendAzureRmResourceGroupName: 'rajiv-test'
@@ -48,5 +53,5 @@ stages:
           inputs:
             provider: 'azurerm'
             command: 'plan'
-            workingDirectory: '$(System.DefaultWorkingDirectory)/envorment/dev'
+            workingDirectory: '$(workingdir)'
             environmentServiceNameAzureRM: 'service-june'
