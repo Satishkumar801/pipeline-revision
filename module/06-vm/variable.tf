@@ -10,8 +10,8 @@ variable "virtual_machine" {
     rg_name = string
     location = string
     size = string
-    admin_username = string
-    admin_password = string
+    # admin_username = string
+    # admin_password = string
     nic_key = string
     caching = string
     storage_account_type = string

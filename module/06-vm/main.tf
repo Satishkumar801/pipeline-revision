@@ -4,8 +4,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
   resource_group_name = each.value.rg_name
   location            = each.value.location
   size                = each.value.size
-  admin_username      = each.value.admin_username
-  admin_password = each.value.admin_password
+  admin_username      = data.azurerm_key_vault_secret.secret1[each.key].value
+  admin_password = data.azurerm_key_vault_secret.secret2[each.key].value
   disable_password_authentication = false
   network_interface_ids = [data.azurerm_network_interface.nicdata[each.value.nic_key].id]
 
@@ -26,6 +26,22 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = each.value.version
   }
 }
+data "azurerm_key_vault" "key" {
+  for_each = var.virtual_machine
+  name                = "rajiv-infra"
+  resource_group_name = "rajiv-test"
+}
+data "azurerm_key_vault_secret" "secret1" {
+  for_each = var.virtual_machine
+  name         = "vmname"
+  key_vault_id = data.azurerm_key_vault.key.id
+}
+data "azurerm_key_vault_secret" "secret2" {
+  for_each = var.virtual_machine
+  name         = "vmpassword"
+  key_vault_id = data.azurerm_key_vault.key.id
+}
+
 
 
 
