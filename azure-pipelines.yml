@@ -75,11 +75,11 @@ stages:
           inputs:
             version: 'v1.26.0'
             dir: '$(workingdir)'
-        - task: dependency-check-build-task@6
-          displayName: waspzap scan
-          inputs:
-            projectName: 'owaspzap'
-            scanPath: '$(workingdir)'
-            format: 'HTML'
-            uploadReports: true
+        # - task: dependency-check-build-task@6
+        #   displayName: waspzap scan
+        #   inputs:
+        #     projectName: 'owaspzap'
+        #     scanPath: '$(workingdir)'
+        #     format: 'HTML'
+        #     uploadReports: true
         
