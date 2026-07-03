@@ -51,7 +51,7 @@ stages:
             command: 'init'
             workingDirectory: '$(workingdir)'
             backendAzureRmUseEntraIdForAuthentication: false
-            backendServiceArm: 'service-june'
+            backendServiceArm: 'july-service'
             backendAzureRmResourceGroupName: '$(resourcegroupname)'
             backendAzureRmStorageAccountName: '$(storageaccountname)'
             backendAzureRmContainerName: '$(containername)'
@@ -62,7 +62,7 @@ stages:
             provider: 'azurerm'
             command: 'plan'
             workingDirectory: '$(workingdir)'
-            environmentServiceNameAzureRM: 'service-june'
+            environmentServiceNameAzureRM: 'july-service'
 
   - stage:
     displayName: scaning 
