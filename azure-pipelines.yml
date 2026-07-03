@@ -84,20 +84,6 @@ stages:
         #     format: 'HTML'
         #     uploadReports: true
 
-  # - stage:
-  #   displayName: manualgate
-  #   jobs:
-      # - job:
-      #   pool: server
-      #   displayName: manualgate
-      #   steps:
-      #   - task: ManualValidation@1
-      #     inputs:
-      #       notifyUsers: 'raushankr28@gmail.com'
-      #       approvers: 'Raushan'
-      #       onTimeout: 'resume'
-
-
   - stage: 
     displayName: ManualApproval
 
