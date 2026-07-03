@@ -33,13 +33,13 @@ data "azurerm_key_vault" "key" {
 }
 data "azurerm_key_vault_secret" "secret1" {
   for_each = var.virtual_machine
-  name         = "vmname"
-  key_vault_id = data.azurerm_key_vault.key.id
+  name         = each.value.secret1
+  key_vault_id = data.azurerm_key_vault.key[each.key].id
 }
 data "azurerm_key_vault_secret" "secret2" {
   for_each = var.virtual_machine
-  name         = "vmpassword"
-  key_vault_id = data.azurerm_key_vault.key.id
+  name         = each.value.secret2
+  key_vault_id = data.azurerm_key_vault.key[each.key].id
 }
 
 

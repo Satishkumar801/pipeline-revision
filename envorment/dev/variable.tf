@@ -77,5 +77,7 @@ variable "vms" {
     offer                = string
     sku                  = string
     version              = string
+    secret1 = string
+    secret2 = string    
   }))
 }

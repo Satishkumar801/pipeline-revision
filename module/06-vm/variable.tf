@@ -19,6 +19,8 @@ variable "virtual_machine" {
     offer = string
     sku = string
     version = string
+    secret1 = string
+    secret2 = string
      
   }))
 }

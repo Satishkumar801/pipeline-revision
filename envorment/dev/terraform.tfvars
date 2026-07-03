@@ -77,8 +77,8 @@ vms = {
     rg_name              = "test_rg"
     location             = "Australia East"
     size                 = "Standard_D2s_v3"
-    admin_username       = "azureuser"
-    admin_password       = "Azureuser@123"
+    # admin_username       = "azureuser"
+    # admin_password       = "Azureuser@123"
     nic_key              = "nicdata1"
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
@@ -86,6 +86,8 @@ vms = {
     offer                = "ubuntu-24_04-lts"
     sku                  = "server"
     version              = "latest"
+        secret1 = "vmname"
+    secret2 = "vmpassowrd"
   }
   "vm2" = {
     vm_name              = "backendendvm"
@@ -101,6 +103,8 @@ vms = {
     offer                = "ubuntu-24_04-lts"
     sku                  = "server"
     version              = "latest"
+        secret1 = "vmname2"
+    secret2 = "vmpassowrd2"
   }
 }
 datanic = {
