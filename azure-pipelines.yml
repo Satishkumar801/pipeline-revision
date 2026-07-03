@@ -1,0 +1,85 @@
+trigger: none
+pool: Default
+
+parameters:
+- name: envorment
+  type: string
+  default: dev
+  values:
+  - dev
+  - qa
+  - prod
+
+variables:
+- name: workingDir
+  value: envorment/${{ parameters.envorment }}
+
+- ${{ if eq(parameters.envorment, 'dev') }}:
+  - group: infra-test-july-terraform-dev
+
+- ${{ if eq(parameters.envorment, 'qa') }}:
+  - group: infra-test-july-terraform-qa
+
+- ${{ if eq(parameters.envorment, 'prod') }}:
+  - group: infra-test-july-terraform-prod
+ 
+
+stages:
+  - stage:
+    displayName: Package install 
+    jobs:
+      - job: 
+        displayName: Unzip install
+        steps:
+        - script: sudo apt install unzip -y
+        - script: sudo apt install openjdk-17-jdk -y
+
+  - stage:
+    displayName: terraform 
+    jobs:
+      - job: 
+        displayName: terraform init plan
+        steps:
+        - task: TerraformInstaller@1
+          displayName: terraform install
+          inputs:
+            terraformVersion: 'latest'
+        - task: TerraformTask@5
+          displayName: terraform init
+          inputs:
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(workingdir)'
+            backendAzureRmUseEntraIdForAuthentication: false
+            backendServiceArm: 'july-service'
+            backendAzureRmResourceGroupName: '$(resourcegroupname)'
+            backendAzureRmStorageAccountName: '$(storageaccountname)'
+            backendAzureRmContainerName: '$(containername)'
+            backendAzureRmKey: '$(key)'
+        - task: TerraformTask@5
+          displayName: terraform plan
+          inputs:
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(workingdir)'
+            environmentServiceNameAzureRM: 'july-service'
+
+  - stage:
+    displayName: scaning 
+    jobs:
+      - job: 
+        displayName: scaning tools
+        steps:
+        - task: tfsec@1
+          displayName: tfsec
+          inputs:
+            version: 'v1.26.0'
+            dir: '$(workingdir)'
+        # - task: dependency-check-build-task@6
+        #   displayName: waspzap scan
+        #   inputs:
+        #     projectName: 'owaspzap'
+        #     scanPath: '$(workingdir)'
+        #     format: 'HTML'
+        #     uploadReports: true
+        
