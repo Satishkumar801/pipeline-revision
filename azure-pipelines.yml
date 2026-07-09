@@ -87,7 +87,7 @@ stages:
           inputs:
             script: |
               cd $(workingdir)
-              trufflehog filesystem . --results=verified
+              trufflehog filesystem . --results=verified  --no-update
         
         # - task: CmdLine@2
         #   displayName: tflint install
