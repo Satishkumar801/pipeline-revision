@@ -29,7 +29,7 @@ stages:
     displayName: Package install 
     jobs:
       - job: 
-        displayName: Unzip install
+        displayName: Agent packege install
         steps:
         - script: sudo apt install unzip -y
         - script: sudo apt install openjdk-17-jdk -y
@@ -74,22 +74,30 @@ stages:
         displayName: scaning tools
         steps:
         - task: CmdLine@2
-          displayName: checkov install
+          displayName: Install Gitleaks
           inputs:
             script: |
-              sudo python3 -m pip install --upgrade pip
-              sudo pip3 install checkov
-              sudo checkov --version
-        - task: CmdLine@2
-          displayName: checkov scane
-          continueOnError: true
-          inputs:
-            script: 'sudo checkov -d . --framework terraform'
-        - task: tfsec@1
-          displayName: tfsec
-          inputs:
-            version: 'v1.26.0'
-            dir: '$(workingdir)'
+              sudo curl -sSfL https://raw.githubusercontent.com/gitleaks/gitleaks/master/install.sh | sh
+              sudo mv gitleaks /usr/local/bin/
+              sudo gitleaks version
+
+        # - task: CmdLine@2
+        #   displayName: checkov install
+        #   inputs:
+        #     script: |
+        #       sudo python3 -m pip install --upgrade pip
+        #       sudo pip3 install checkov
+        #       sudo checkov --version
+        # - task: CmdLine@2
+        #   displayName: checkov scane
+        #   continueOnError: true
+        #   inputs:
+        #     script: 'sudo checkov -d . --framework terraform'
+        # - task: tfsec@1
+        #   displayName: tfsec
+        #   inputs:
+        #     version: 'v1.26.0'
+        #     dir: '$(workingdir)'
 
         # - task: dependency-check-build-task@6
         #   displayName: waspzap scan
