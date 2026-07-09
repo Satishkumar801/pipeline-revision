@@ -194,21 +194,24 @@ stages:
     - job: 
       displayName: terraform apply
       steps:
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: '$(workingdir)'
-              backendAzureRmUseEntraIdForAuthentication: false
-              backendServiceArm: 'july-service'
-              backendAzureRmResourceGroupName: '$(resourcegroupname)'
-              backendAzureRmStorageAccountName: '$(storageaccountname)'
-              backendAzureRmContainerName: '$(containername)'
-              backendAzureRmKey: '$(key)'
+      - task: TerraformInstaller@1
+        inputs:
+          terraformVersion: 'latest'
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          workingDirectory: '$(workingdir)'
+          backendAzureRmUseEntraIdForAuthentication: false
+          backendServiceArm: 'july-service'
+          backendAzureRmResourceGroupName: '$(resourcegroupname)'
+          backendAzureRmStorageAccountName: '$(storageaccountname)'
+          backendAzureRmContainerName: '$(containername)'
+          backendAzureRmKey: '$(key)'
           
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(workingdir)'
-              environmentServiceNameAzureRM: 'july-service'
+      - task: TerraformTask@5
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          workingDirectory: '$(workingdir)'
+          environmentServiceNameAzureRM: 'july-service'
