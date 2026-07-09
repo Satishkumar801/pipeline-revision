@@ -45,18 +45,19 @@ stages:
           displayName: terraform install
           inputs:
             terraformVersion: 'latest'
-        - task: TerraformTask@5
-          displayName: terraform init
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(workingdir)'
-            backendAzureRmUseEntraIdForAuthentication: false
-            backendServiceArm: 'july-service'
-            backendAzureRmResourceGroupName: '$(resourcegroupname)'
-            backendAzureRmStorageAccountName: '$(storageaccountname)'
-            backendAzureRmContainerName: '$(containername)'
-            backendAzureRmKey: '$(key)'
+            
+        # - task: TerraformTask@5
+        #   displayName: terraform init
+        #   inputs:
+        #     provider: 'azurerm'
+        #     command: 'init'
+        #     workingDirectory: '$(workingdir)'
+        #     backendAzureRmUseEntraIdForAuthentication: false
+        #     backendServiceArm: 'july-service'
+        #     backendAzureRmResourceGroupName: '$(resourcegroupname)'
+        #     backendAzureRmStorageAccountName: '$(storageaccountname)'
+        #     backendAzureRmContainerName: '$(containername)'
+        #     backendAzureRmKey: '$(key)'
 
         # - task: TerraformTask@5
         #   displayName: terraform plan
