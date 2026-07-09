@@ -85,13 +85,12 @@ stages:
           continueOnError: true
           inputs:
             script: 'sudo checkov -d . --framework terraform'
+        - task: tfsec@1
+          displayName: tfsec
+          inputs:
+            version: 'v1.26.0'
+            dir: '$(workingdir)'
 
-
-        # - task: tfsec@1
-        #   displayName: tfsec
-        #   inputs:
-        #     version: 'v1.26.0'
-        #     dir: '$(workingdir)'
         # - task: dependency-check-build-task@6
         #   displayName: waspzap scan
         #   inputs:
