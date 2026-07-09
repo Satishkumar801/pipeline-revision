@@ -82,10 +82,20 @@ stages:
               tar -xzf gitleaks_8.28.0_linux_x64.tar.gz
               chmod +x gitleaks
               gitleaks version
-        # - task: CmdLine@2
-        #   displayName: Run gitleaks
-        #   inputs:
-        #     script: './gitleaks detect --source . --verbose'
+        - task: CmdLine@2
+          continueOnError: true
+          displayName: Run gitleaks
+          inputs:
+            script: './gitleaks detect --source . --verbose'
+        - task: PublishTestResults@2
+          inputs:
+            testResultsFormat: 'JUnit'
+            testResultsFiles: '**/TEST-*.xml'
+            searchFolder: '$(workingdir)'
+            failTaskOnFailedTests: true
+            failTaskOnFailureToPublishResults: true
+            failTaskOnMissingResultsFile: true
+            testRunTitle: 'Infra-Gitleaks'
 
         # - task: CmdLine@2
         #   displayName: checkov install
