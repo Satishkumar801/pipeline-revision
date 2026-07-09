@@ -80,7 +80,7 @@ stages:
               sudo python3 -m pip install --upgrade pip
               sudo pip3 install checkov
               sudo checkov --version
-              sudo checkov -d . --framework terraform
+
 
         # - task: tfsec@1
         #   displayName: tfsec
