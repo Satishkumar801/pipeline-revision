@@ -56,13 +56,14 @@ stages:
             backendAzureRmStorageAccountName: '$(storageaccountname)'
             backendAzureRmContainerName: '$(containername)'
             backendAzureRmKey: '$(key)'
-        - task: TerraformTask@5
-          displayName: terraform plan
-          inputs:
-            provider: 'azurerm'
-            command: 'plan'
-            workingDirectory: '$(workingdir)'
-            environmentServiceNameAzureRM: 'july-service'
+
+        # - task: TerraformTask@5
+        #   displayName: terraform plan
+        #   inputs:
+        #     provider: 'azurerm'
+        #     command: 'plan'
+        #     workingDirectory: '$(workingdir)'
+        #     environmentServiceNameAzureRM: 'july-service'
 
 
   - stage:
@@ -71,12 +72,18 @@ stages:
       - job: 
         displayName: scaning tools
         steps:
-
-        - task: tfsec@1
-          displayName: tfsec
+        - task: CmdLine@2
+          displayName: checkov install
           inputs:
-            version: 'v1.26.0'
-            dir: '$(workingdir)'
+            script: |
+              pip install checkov
+               checkov --version
+
+        # - task: tfsec@1
+        #   displayName: tfsec
+        #   inputs:
+        #     version: 'v1.26.0'
+        #     dir: '$(workingdir)'
         # - task: dependency-check-build-task@6
         #   displayName: waspzap scan
         #   inputs:
