@@ -46,26 +46,26 @@ stages:
           inputs:
             terraformVersion: 'latest'
             
-        - task: TerraformTask@5
-          displayName: terraform init
-          inputs:
-            provider: 'azurerm'
-            command: 'init'
-            workingDirectory: '$(workingdir)'
-            backendAzureRmUseEntraIdForAuthentication: false
-            backendServiceArm: 'july-service'
-            backendAzureRmResourceGroupName: '$(resourcegroupname)'
-            backendAzureRmStorageAccountName: '$(storageaccountname)'
-            backendAzureRmContainerName: '$(containername)'
-            backendAzureRmKey: '$(key)'
+        # - task: TerraformTask@5
+        #   displayName: terraform init
+        #   inputs:
+        #     provider: 'azurerm'
+        #     command: 'init'
+        #     workingDirectory: '$(workingdir)'
+        #     backendAzureRmUseEntraIdForAuthentication: false
+        #     backendServiceArm: 'july-service'
+        #     backendAzureRmResourceGroupName: '$(resourcegroupname)'
+        #     backendAzureRmStorageAccountName: '$(storageaccountname)'
+        #     backendAzureRmContainerName: '$(containername)'
+        #     backendAzureRmKey: '$(key)'
 
-        - task: TerraformTask@5
-          displayName: terraform plan
-          inputs:
-            provider: 'azurerm'
-            command: 'plan'
-            workingDirectory: '$(workingdir)'
-            environmentServiceNameAzureRM: 'july-service'
+        # - task: TerraformTask@5
+        #   displayName: terraform plan
+        #   inputs:
+        #     provider: 'azurerm'
+        #     command: 'plan'
+        #     workingDirectory: '$(workingdir)'
+        #     environmentServiceNameAzureRM: 'july-service'
 
 
   - stage:
@@ -75,58 +75,73 @@ stages:
         displayName: scaning tools
         steps:
         - task: CmdLine@2
-          displayName: tflint install
+          displayName: Install TruffleHog
           inputs:
             script: |
-              curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-              sudo mv tflint /usr/local/bin/
-              tflint --version
+              curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh
+              sudo mv trufflehog /usr/local/bin/
+              trufflehog --version
         - task: CmdLine@2
-          displayName: Initialize TFLint
+          displayName: Run TruffleHog
           inputs:
             script: |
               cd $(workingdir)
-              tflint --init
-        - task: CmdLine@2
-          continueOnError: true
-          displayName: Run tflint
-          inputs:
-            script: |
-              cd $(workingdir)
-              tflint --recursive
+              trufflehog filesystem .
+              --results=verified
+        
+        # - task: CmdLine@2
+        #   displayName: tflint install
+        #   inputs:
+        #     script: |
+        #       curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+        #       sudo mv tflint /usr/local/bin/
+        #       tflint --version
+        # - task: CmdLine@2
+        #   displayName: Initialize TFLint
+        #   inputs:
+        #     script: |
+        #       cd $(workingdir)
+        #       tflint --init
+        # - task: CmdLine@2
+        #   continueOnError: true
+        #   displayName: Run tflint
+        #   inputs:
+        #     script: |
+        #       cd $(workingdir)
+        #       tflint --recursive
 
-        - task: CmdLine@2
-          displayName: trivy install
-          inputs:
-            script: |
-              wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.64.1_Linux-64bit.tar.gz
-              tar -xzf trivy_0.64.1_Linux-64bit.tar.gz
-              sudo mv trivy /usr/local/bin/
-              trivy --version
-        - task: trivy@2
-          displayName: trivy scan
-          inputs:
-            method: 'system'
-            type: 'repository'
-            target: '$(workingdir)'
-            scanners: 'misconfig'
-            severities: LOW, MEDIUM, HIGH
-            showSuppressed: true
-            failOnSeverityThreshold: 'HIGH'
+        # - task: CmdLine@2
+        #   displayName: trivy install
+        #   inputs:
+        #     script: |
+        #       wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.64.1_Linux-64bit.tar.gz
+        #       tar -xzf trivy_0.64.1_Linux-64bit.tar.gz
+        #       sudo mv trivy /usr/local/bin/
+        #       trivy --version
+        # - task: trivy@2
+        #   displayName: trivy scan
+        #   inputs:
+        #     method: 'system'
+        #     type: 'repository'
+        #     target: '$(workingdir)'
+        #     scanners: 'misconfig'
+        #     severities: LOW, MEDIUM, HIGH
+        #     showSuppressed: true
+        #     failOnSeverityThreshold: 'HIGH'
             
-        - task: CmdLine@2
-          displayName: Install Gitleaks
-          inputs:
-            script: |
-              wget https://github.com/gitleaks/gitleaks/releases/download/v8.28.0/gitleaks_8.28.0_linux_x64.tar.gz
-              tar -xzf gitleaks_8.28.0_linux_x64.tar.gz
-              chmod +x gitleaks
-              gitleaks version
-        - task: CmdLine@2
-          continueOnError: true
-          displayName: Run gitleaks
-          inputs:
-            script: './gitleaks detect --source . --verbose'
+        # - task: CmdLine@2
+        #   displayName: Install Gitleaks
+        #   inputs:
+        #     script: |
+        #       wget https://github.com/gitleaks/gitleaks/releases/download/v8.28.0/gitleaks_8.28.0_linux_x64.tar.gz
+        #       tar -xzf gitleaks_8.28.0_linux_x64.tar.gz
+        #       chmod +x gitleaks
+        #       gitleaks version
+        # - task: CmdLine@2
+        #   continueOnError: true
+        #   displayName: Run gitleaks
+        #   inputs:
+        #     script: './gitleaks detect --source . --verbose'
 
         # - task: PublishTestResults@2
         #   inputs:
@@ -138,23 +153,23 @@ stages:
         #     failTaskOnMissingResultsFile: true
         #     testRunTitle: 'Infra-Gitleaks'
 
-        - task: CmdLine@2
-          displayName: checkov install
-          inputs:
-            script: |
-              sudo python3 -m pip install --upgrade pip
-              sudo pip3 install checkov
-              sudo checkov --version
-        - task: CmdLine@2
-          displayName: checkov scane
-          continueOnError: true
-          inputs:
-            script: 'sudo checkov -d . --framework terraform'
-        - task: tfsec@1
-          displayName: tfsec
-          inputs:
-            version: 'v1.26.0'
-            dir: '$(workingdir)'
+        # - task: CmdLine@2
+        #   displayName: checkov install
+        #   inputs:
+        #     script: |
+        #       sudo python3 -m pip install --upgrade pip
+        #       sudo pip3 install checkov
+        #       sudo checkov --version
+        # - task: CmdLine@2
+        #   displayName: checkov scane
+        #   continueOnError: true
+        #   inputs:
+        #     script: 'sudo checkov -d . --framework terraform'
+        # - task: tfsec@1
+        #   displayName: tfsec
+        #   inputs:
+        #     version: 'v1.26.0'
+        #     dir: '$(workingdir)'
 
         # - task: dependency-check-build-task@6
         #   displayName: waspzap scan
@@ -188,30 +203,30 @@ stages:
   #           Please review the deployment and approve to continue.
 
   #         onTimeout: reject
-  - stage: 
-    displayName: terraformapply
-    jobs:
-    - job: 
-      displayName: terraform apply
-      steps:
-      - task: TerraformInstaller@1
-        inputs:
-          terraformVersion: 'latest'
-      - task: TerraformTask@5
-        inputs:
-          provider: 'azurerm'
-          command: 'init'
-          workingDirectory: '$(workingdir)'
-          backendAzureRmUseEntraIdForAuthentication: false
-          backendServiceArm: 'july-service'
-          backendAzureRmResourceGroupName: '$(resourcegroupname)'
-          backendAzureRmStorageAccountName: '$(storageaccountname)'
-          backendAzureRmContainerName: '$(containername)'
-          backendAzureRmKey: '$(key)'
+  # - stage: 
+  #   displayName: terraformapply
+  #   jobs:
+  #   - job: 
+  #     displayName: terraform apply
+  #     steps:
+  #     - task: TerraformInstaller@1
+  #       inputs:
+  #         terraformVersion: 'latest'
+  #     - task: TerraformTask@5
+  #       inputs:
+  #         provider: 'azurerm'
+  #         command: 'init'
+  #         workingDirectory: '$(workingdir)'
+  #         backendAzureRmUseEntraIdForAuthentication: false
+  #         backendServiceArm: 'july-service'
+  #         backendAzureRmResourceGroupName: '$(resourcegroupname)'
+  #         backendAzureRmStorageAccountName: '$(storageaccountname)'
+  #         backendAzureRmContainerName: '$(containername)'
+  #         backendAzureRmKey: '$(key)'
           
-      - task: TerraformTask@5
-        inputs:
-          provider: 'azurerm'
-          command: 'apply'
-          workingDirectory: '$(workingdir)'
-          environmentServiceNameAzureRM: 'july-service'
+  #     - task: TerraformTask@5
+  #       inputs:
+  #         provider: 'azurerm'
+  #         command: 'apply'
+  #         workingDirectory: '$(workingdir)'
+  #         environmentServiceNameAzureRM: 'july-service'
