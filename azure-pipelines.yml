@@ -78,8 +78,9 @@ stages:
           inputs:
             method: 'system'
             type: 'repository'
+            target: '$(workingdir)'
             scanners: 'misconfig'
-            severities: 'MEDIUM'
+            severities: 'LOW, MEDIUM, HIGH'
             showSuppressed: true
             failOnSeverityThreshold: 'HIGH'
             
