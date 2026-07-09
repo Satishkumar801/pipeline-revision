@@ -33,6 +33,7 @@ stages:
         steps:
         - script: sudo apt install unzip -y
         - script: sudo apt install openjdk-17-jdk -y
+        - script: sudo apt install python3-pip -y
 
   - stage:
     displayName: terraform 
@@ -76,8 +77,10 @@ stages:
           displayName: checkov install
           inputs:
             script: |
-              pip install checkov
-               checkov --version
+              sudo python3 -m pip install --upgrade pip
+              sudo pip3 install checkov
+              sudo checkov --version
+              sudo checkov -d . --framework terraform
 
         # - task: tfsec@1
         #   displayName: tfsec
