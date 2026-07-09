@@ -71,6 +71,7 @@ stages:
       - job: 
         displayName: scaning tools
         steps:
+
         - task: tfsec@1
           displayName: tfsec
           inputs:
@@ -84,48 +85,50 @@ stages:
         #     format: 'HTML'
         #     uploadReports: true
 
-  - stage: 
-    displayName: ManualApproval
+  # - stage: 
+  #   displayName: ManualApproval
 
-    jobs:
-    - job: ManualValidation
-      displayName: "Manual Gate"
+  #   jobs:
+  #   - job: ManualValidation
+  #     displayName: "Manual Gate"
 
-      pool: server
+  #     pool: server
 
-      steps:
-      - task: ManualValidation@1
-        timeoutInMinutes: 1440
+  #     steps:
+  #     - task: ManualValidation@1
+  #       timeoutInMinutes: 1440
 
-        inputs:
-          notifyUsers: |
-            raushankr28@gmail.com
+  #       inputs:
+  #         notifyUsers: |
+  #           raushankr28@gmail.com
 
-          approvers: |
-            Raushan
+  #         approvers: |
+  #           Raushan
 
-          instructions: |
-            Please review the deployment and approve to continue.
+  #         instructions: |
+  #           Please review the deployment and approve to continue.
 
-          onTimeout: reject
-
-    - job: 
-      displayName: terraform apply
-      steps:
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: '$(workingdir)'
-              backendAzureRmUseEntraIdForAuthentication: false
-              backendServiceArm: 'july-service'
-              backendAzureRmResourceGroupName: '$(resourcegroupname)'
-              backendAzureRmStorageAccountName: '$(storageaccountname)'
-              backendAzureRmContainerName: '$(containername)'
-              backendAzureRmKey: '$(key)'
-          - task: TerraformTask@5
-            inputs:
-              provider: 'azurerm'
-              command: 'apply'
-              workingDirectory: '$(workingdir)'
-              environmentServiceNameAzureRM: 'july-service'
+  #         onTimeout: reject
+  # - stage: 
+  #   displayName: terraformapply
+  #   jobs:
+  #   - job: 
+  #     displayName: terraform apply
+  #     steps:
+  #         - task: TerraformTask@5
+  #           inputs:
+  #             provider: 'azurerm'
+  #             command: 'init'
+  #             workingDirectory: '$(workingdir)'
+  #             backendAzureRmUseEntraIdForAuthentication: false
+  #             backendServiceArm: 'july-service'
+  #             backendAzureRmResourceGroupName: '$(resourcegroupname)'
+  #             backendAzureRmStorageAccountName: '$(storageaccountname)'
+  #             backendAzureRmContainerName: '$(containername)'
+  #             backendAzureRmKey: '$(key)'
+  #         - task: TerraformTask@5
+  #           inputs:
+  #             provider: 'azurerm'
+  #             command: 'apply'
+  #             workingDirectory: '$(workingdir)'
+  #             environmentServiceNameAzureRM: 'july-service'
