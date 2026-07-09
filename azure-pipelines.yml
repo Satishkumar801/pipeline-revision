@@ -78,7 +78,8 @@ stages:
           displayName: Install TruffleHog
           inputs:
             script: |
-              curl -sSfL https://raw.githubusercontent.com/trufflesecurity/trufflehog/main/scripts/install.sh | sh
+              wget https://github.com/trufflesecurity/trufflehog/releases/download/v3.95.8/trufflehog_3.95.8_linux_amd64.tar.gz
+              tar -xzf trufflehog_3.95.8_linux_amd64.tar.gz
               sudo mv trufflehog /usr/local/bin/
               trufflehog --version
         - task: CmdLine@2
@@ -86,8 +87,7 @@ stages:
           inputs:
             script: |
               cd $(workingdir)
-              trufflehog filesystem .
-              --results=verified
+              trufflehog filesystem . --results=verified
         
         # - task: CmdLine@2
         #   displayName: tflint install
