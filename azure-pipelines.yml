@@ -89,7 +89,7 @@ stages:
             type: 'repository'
             target: '$(workingdir)'
             scanners: 'misconfig'
-            severities: 'LOW, MEDIUM, HIGH'
+            severities: LOW, MEDIUM, HIGH
             showSuppressed: true
             failOnSeverityThreshold: 'HIGH'
             
